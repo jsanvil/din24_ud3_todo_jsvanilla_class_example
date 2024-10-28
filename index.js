@@ -1,13 +1,14 @@
 const taskListContainer = document.querySelector('#taskList ul')
 const taskDescriptionInput = document.getElementById('taskDescription')
 const newTaskForm = document.getElementById('newTaskForm')
+const filterSearchInput = document.getElementById('filterSearch')
 
 class Task {
     #htmlElement
 
     constructor(title, done = false) {
         this.id = crypto.randomUUID()
-        this.title  = title
+        this.title = title
         this.done = done
     }
 
@@ -21,7 +22,7 @@ class Task {
             <input type="checkbox">
             <span>${this.title}</span>
             <button title="Borrar">🗑</button>`
-        
+
         // añadir eventos
         newTask.querySelector('button').addEventListener('click', e => {
             if (confirm(`¿Borrar ${this.title}?`)) {
@@ -47,26 +48,63 @@ newTaskForm.addEventListener('submit', (e) => {
     e.preventDefault()
     const taskTitle = taskDescriptionInput.value
     taskList.push(new Task(taskTitle))
-    renderTaskList()
+    renderTaskList(taskList)
 })
 
+// estados
 let taskList = []
+let filteredTaskList = []
+
+let filters = {
+    search: '',
+    hideCompleted: false,
+    orderByName: false,
+    orderByStatus: false
+}
 
 taskList.push(new Task('Comprar desayuno'))
 taskList.push(new Task('Lavar la ropa'))
 taskList.push(new Task('Estudiar'))
 
-renderTaskList()
+renderTaskList(taskList)
 
-function renderTaskList() {
+function renderTaskList(list) {
     taskListContainer.innerHTML = ''
-    taskList.forEach(task => {
+    list.forEach(task => {
         taskListContainer.appendChild(task.createElement())
     })
 }
 
 function removeTask(taskToRemove) {
-    taskList = taskList.filter(task => task.id !== taskToRemove.id )
+    taskList = taskList.filter(task => task.id !== taskToRemove.id)
 
-    renderTaskList()
+    renderTaskList(taskList)
+}
+
+filterSearchInput.addEventListener('input', (e) => {
+    const searchText = e.target.value
+    if (searchText.trim()) {
+        filteredTaskList = taskList.filter(task => {
+            return task.title.toLowerCase().includes(searchText.toLowerCase())
+        })
+        renderTaskList(filteredTaskList)
+    }
+    else {
+        renderTaskList(taskList)
+    }
+})
+
+function updateFilteredList() {
+
+    filteredTaskList = taskList
+        // search
+        .filter(task => task.title.toLowerCase().includes(filter.search.toLowerCase()))
+        // hide completed
+        .filter(task => filter.hideCompleted ? ! task.done : true)
+        .sort((a, b) => {
+            if (filter.orderByName) {
+                return a.title.localeCompare(b.title)
+            }
+            return a
+        })
 }
