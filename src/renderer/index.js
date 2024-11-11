@@ -3,13 +3,12 @@ import TaskListView from "./TaskListView.js";
 
 const taskListView = new TaskListView();
 
-if (taskListView.taskList.length === 0) {
-    taskListView.addTask(new Task({ title: "Estudiar" }));
-    taskListView.addTask(new Task({ title: "Lavar la ropa" }));
-    taskListView.addTask(new Task({ title: "Comprar desayuno" }));
-} else {
-  taskListView.updateFilteredList();
-}
+// cargar la lista de tareas guardadas
+window.bridge.loadList().then((taskList) => {
+  if (taskList) {
+    taskList.forEach((task) => taskListView.addTask(new Task(task)));
+  }
+})
 
 // ELEMENTOS DEL DOM
 

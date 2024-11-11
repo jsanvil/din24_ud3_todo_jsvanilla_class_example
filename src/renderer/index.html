@@ -3,8 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self'">
+          
     <title>ToDo js</title>
     <script defer
             type="module"
@@ -59,7 +60,8 @@
                                    id="filter-sort-title">
                             <label for="filter-sort-title">Ordenar alfabéticamente</label>
                         </div>
-                        <button type="reset" id="filter-reset-button">Limpiar</button>
+                        <button type="reset"
+                                id="filter-reset-button">Limpiar</button>
                     </fieldset>
                 </form>
             </div>

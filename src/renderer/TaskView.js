@@ -35,9 +35,7 @@ class TaskView {
 
       // evento borrar
       newTask.querySelector('button').addEventListener('click', e => {
-          if (this.taskListView && confirm(`¿Borrar "${this.title}"?`)) {
-              this.taskListView.removeTask(this.task)
-          }
+        this.taskListView.removeTask(this.task)
       })
 
       // marcar/desmarcar completada

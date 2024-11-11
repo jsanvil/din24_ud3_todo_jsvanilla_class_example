@@ -16,6 +16,7 @@ class TaskListView {
       orderByTitle: false,
       orderByStatus: false,
     };
+
   }
 
   createElement() {
@@ -33,13 +34,18 @@ class TaskListView {
 
   addTask(task) {
     this.taskList.push(task);
+    this.taskList.save();
     this.updateFilteredList();
   }
 
-  removeTask(taskToRemove) {
-    this.taskList.splice(this.taskList.indexOf(taskToRemove), 1);
+  async removeTask(taskToRemove) {
+    const confirmDelete = await window.bridge.confirmDeleteTask(taskToRemove);
 
-    this.updateFilteredList();
+    if (confirmDelete.response === 1) {
+      this.taskList.splice(this.taskList.indexOf(taskToRemove), 1);
+      this.taskList.save();
+      this.updateFilteredList();
+    }
   }
 
   renderTaskList() {
