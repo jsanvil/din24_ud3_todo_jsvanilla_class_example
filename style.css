@@ -1,0 +1,164 @@
+/* css reset */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* global variables */
+
+html {
+  --color-background: #333;
+  --color-text: #fff;
+  --padding: 20px;
+}
+
+/* global styles */
+body {
+  font-family: system-ui, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-size: 16px;
+  line-height: 1.6;
+  max-height: 100vh;
+}
+
+/* layout */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: auto;
+
+  --header-height: 60px;
+  
+  & #app-header {
+    height: var(--header-height);
+    
+    & h1 {
+      text-align: center;
+    }
+  }
+  
+  & #app-container {
+    display: flex;
+    flex-wrap: auto;
+    flex-grow: 1;
+    height: calc(100vh - var(--header-height));
+
+    #task-list {
+      order: 1;
+      flex-grow: 3;
+      min-width: 500px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #555 #333;
+      padding: var(--padding) 0;
+    }
+
+    & #forms-container {
+      order: 2;
+      display: flex;
+      flex-direction: column;
+      gap: var(--padding);
+      padding: var(--padding);
+
+      & #create-task-form {
+        
+      }
+
+      & #filter-tasks-form {
+
+      }
+    }
+  }
+}
+
+form {
+  display: flex;
+  margin-bottom: var(--padding);
+
+  & fieldset {
+    flex: 1;
+    border: dashed 2px #555;
+    padding: 0.5em;
+    border-radius: 5px;
+
+    &:hover {
+      border-color: #777;
+      background: #444;
+    }
+
+    & legend {
+      padding: 0 var(--padding);
+      font-weight: bold;
+    }
+  }
+}
+
+#task-list {
+  & ul {
+    list-style: none;
+
+    & li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--padding);
+      padding: calc(var(--padding) / 2) var(--padding);
+      border-bottom: solid 1px #555;
+
+      &:hover {
+        background-color: #444;
+      }
+
+      & .task-title {
+        flex: 1;
+      }
+
+      & .task-status-done {
+        text-decoration: line-through;
+        color: #aaa;
+        transition: line-through 0.3s;
+      }
+
+      & button {
+        background: #a55;
+        color: #fff;
+        border: none;
+        font-size: 0.5em;
+        padding: 0.5em;
+        border-radius: 3px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #f00;
+        }
+
+        &:active {
+          background-color: #a00;
+        }
+      }
+
+      & input[type="checkbox"] {
+        cursor: pointer;
+        appearance: none;
+        width: 1em;
+        height: 1em;
+        border: solid 1px #777;
+        border-radius: 3px;
+        background: #333;
+        transition: background-color 0.3s;
+
+        &:checked {
+          background-color: #005e02;
+        }
+
+        &:hover {
+          border-color: #aaa;
+        }
+      }
+    }
+  }
+}

@@ -1,36 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
     <title>ToDo js</title>
-    <script defer src="index.js"></script>
-    <style>
-        .done {
-            text-decoration: line-through;
-        }
-    </style>
+    <script defer
+            type="module"
+            src="index.js"></script>
+    <link rel="stylesheet"
+          href="style.css">
 </head>
+
 <body>
+    <div id="app">
+        <div id="app-header">
+            <h1>ToDo List Vanilla</h1>
+        </div>
+        <div id="app-container">
 
-    <form action="#" id="newTaskForm">
-        <label for="taskDescription">New task:</label>
-        <input type="text" name="taskDescription" id="taskDescription" required>
-        <button type="submit" id="addTaskBtn">Add</button>
-    </form>
+            <div id="forms-container">
+                <form id="create-task-form">
+                    <fieldset>
+                        <legend>➕ Crear nueva tarea</legend>
+                        <label for="create-task-input">Título:</label>
+                        <input type="text"
+                               name="taskTitle"
+                               id="create-task-input"
+                               required>
+                        <button type="submit"
+                                id="addTaskBtn">Añadir</button>
+                    </fieldset>
+                </form>
 
-    <p>Filtros:</p>
-    <form action="#" id="filtersForm">
-        <input type="text" name="filterSearch" id="filterSearch" placeholder="buscar...">
-        <br>
-        <label for="hideCompleted">Ocultar completadas:</label>
-        <input type="checkbox" id="hideCompleted">
-    </form>
-    
-    <div id="taskList">
-        <ul>
+                <form id="filter-tasks-form">
+                    <fieldset>
+                        <legend>Filtros</legend>
+                        <div>
+                            <label for="filter-search">🔎</label>
+                            <input type="text"
+                                   name="filterSearch"
+                                   id="filter-search"
+                                   placeholder="buscar...">
+                        </div>
+                        <div>
+                            <input type="checkbox"
+                                   id="filter-hide-completed">
+                            <label for="filter-hide-completed">Ocultar completadas</label>
+                        </div>
+                        <div>
+                            <input type="checkbox"
+                                   id="filter-sort-status">
+                            <label for="filter-sort-status">Ordenar por estado</label>
+                        </div>
+                        <div>
+                            <input type="checkbox"
+                                   id="filter-sort-title">
+                            <label for="filter-sort-title">Ordenar alfabéticamente</label>
+                        </div>
+                        <button type="reset" id="filter-reset-button">Limpiar</button>
+                    </fieldset>
+                </form>
+            </div>
 
-        </ul>
+            <div id="task-list">
+            </div>
+        </div>
     </div>
 </body>
+
 </html>
