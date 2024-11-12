@@ -1,5 +1,6 @@
 import TaskList from "./TaskList.js";
 import TaskView from "./TaskView.js";
+import TaskForm from "./TaskForm.js";
 
 class TaskListView {
   #htmlElement;
@@ -36,6 +37,15 @@ class TaskListView {
     this.taskList.push(task);
     this.taskList.save();
     this.updateFilteredList();
+  }
+
+  editTask(taskToEdit) {
+    const modal = document.getElementById('modal')
+    modal.style.display = 'block';
+    const taskForm = new TaskForm(taskToEdit, this.taskList);
+    const body = modal.querySelector('.modal-body')
+    body.innerHTML = ''
+    body.appendChild(taskForm.createTaskForm())
   }
 
   async removeTask(taskToRemove) {

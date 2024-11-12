@@ -29,12 +29,18 @@ class TaskView {
       newTask.innerHTML = `
           <input type="checkbox" ${this.task.done ? 'checked' : ''}>
           <span class="task-title ${this.task.done ? 'task-status-done' : ''}">${this.task.title}</span>
-          <button title="Borrar">🗑</button>`
+          <button class="btn edit-task" title="Editar">✏️</button>
+          <button class="btn delete-task" title="Borrar">🗑</button>`
 
       // añadir eventos
 
+      // evento editar
+      newTask.querySelector('.edit-task').addEventListener('click', e => {
+        this.taskListView.editTask(this.task)
+      })
+
       // evento borrar
-      newTask.querySelector('button').addEventListener('click', e => {
+      newTask.querySelector('.delete-task').addEventListener('click', e => {
         this.taskListView.removeTask(this.task)
       })
 

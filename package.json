@@ -1,7 +1,7 @@
 {
   "name": "din24_todo_js_vanilla",
   "version": "1.0.0",
-  "description": "Aplicación _ToDo List_ con Javascript _vanilla_ hecha en clase (_Live coding_)",
+  "description": "Aplicación _ToDo List_ con Javascript _vanilla_ y Electron",
   "main": "main.js",
   "scripts": {
     "start": "electron ./src/main/main.js"
