@@ -11,15 +11,15 @@ class TaskStorage {
   }
 
   read () {
-    this.readCount++
-    console.log(`Lectura número ${this.readCount}`)
+    if (!fs.existsSync(this.filename)) {
+      this.write([])
+      return []
+    }
     const data = fs.readFileSync(this.filename, 'utf-8')
     return JSON.parse(data)
   }
 
   write (taskList) {
-    this.writeCount++
-    console.log(`Escritura número ${this.writeCount}`)
     fs.writeFileSync(this.filename, JSON.stringify(taskList, null, 2))
   }
 }

@@ -31,13 +31,16 @@ const filterSortByTitle = document.getElementById('filter-sort-title')
 // capturar el evento submit del formulario
 newTaskForm.addEventListener('submit', (e) => {
   e.preventDefault()
-  e.stopPropagation()
 
-  if (!newTaskForm.checkValidity()) {
+  if (!taskTitleInput.checkValidity()) {
+    newTaskForm.classList.add('was-validated')
+    taskTitleInput.parentElement.classList.add('is-invalid')
     return
   }
+  newTaskForm.classList.remove('was-validated')
+  taskTitleInput.parentElement.classList.remove('is-invalid')
 
-  const taskTitle = taskTitleInput.value
+  const taskTitle = taskTitleInput.value.trim()
   taskListView.addTask(new Task({ title: taskTitle }))
 
   // usabilidad: limpiar el input y poner el foco en él para seguir añadiendo tareas

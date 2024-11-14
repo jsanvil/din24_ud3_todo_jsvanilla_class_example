@@ -54,12 +54,13 @@ class TaskForm {
     const modalBody = parentModalElement.querySelector('.modal-body')
 
     modalBody.innerHTML = `
+    <form id="task-form" class="needs-validation" novalidate>
       <div class="row mb-3">
         <label class="col-sm-3 col-form-label" for="task-title">Título</label>
         <div class="col-sm-9">
-          <input class="form-control" id="task-title" type="text" name="title" placeholder="título"
-            value="${this.task.title}" required>
-          <span class="error"></span>
+          <input class="form-control" id="task-title" type="text" name="title" placeholder="título" pattern=".*\S.*"
+            value="${this.task.title.trim()}" required>
+          <span class="invalid-feedback">El título es necesario</span>
         </div>
       </div>
       <div class="row mb-3">
@@ -88,8 +89,10 @@ class TaskForm {
             value="${this.task.description}"></textarea>
         </div>
       </div>
+    <form>
     `
 
+    this.taskForm = modalBody.querySelector('#task-form')
     this.title = modalBody.querySelector('#task-title')
     this.status = modalBody.querySelector('#task-status')
     this.priority = modalBody.querySelector('#task-priority')
@@ -105,19 +108,19 @@ class TaskForm {
     this.btnSave.addEventListener('click', (e) => {
       e.preventDefault()
 
+      this.taskForm.classList.add('was-validated')
+
       // validar título
-      if (!this.title.value) {
-        this.title.nextElementSibling.textContent = 'El título es requerido'
+      if (this.title.value.trim() === '') {
+        this.title.focus()
         return
-      } else {
-        this.title.nextElementSibling.textContent = ''
       }
 
       // guardar tarea
-      this.task.title = this.title.value
+      this.task.title = this.title.value.trim()
       this.task.done = this.status.checked
       this.task.priority = this.priority.selectedIndex
-      this.task.description = this.description.value
+      this.task.description = this.description.value.trim()
 
       if (!this.isEditing) {
         this.taskListView.addTask(this.task)
