@@ -1,15 +1,23 @@
 {
   "name": "din24_todo_js_vanilla",
   "version": "1.0.0",
-  "description": "Aplicación _ToDo List_ con Javascript _vanilla_ y Electron",
+  "description": "Aplicación ToDo List con Javascript vanilla y Electron",
   "main": "main.js",
   "scripts": {
     "start": "electron ./src/main/main.js"
   },
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3"
+  },
   "devDependencies": {
     "electron": "^33.2.0",
-    "electron-reloader": "^1.2.3"
+    "electron-reloader": "^1.2.3",
+    "standard": "^17.1.2"
+  },
+  "eslintConfig": {
+    "extends": "standard"
   }
 }

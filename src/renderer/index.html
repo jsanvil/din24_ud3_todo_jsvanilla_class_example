@@ -1,81 +1,123 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es"
+      data-bs-theme="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy"
-          content="default-src 'self'; script-src 'self'">
-          
-    <title>ToDo js</title>
+          content="default-src 'self'; script-src 'self'; img-src 'self' data:">
+
+    <title>ToDo js vanilla</title>
+
+    <link rel="stylesheet"
+          href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet"
+          href="style.css">
+
     <script defer
             type="module"
             src="index.js"></script>
-    <link rel="stylesheet"
-          href="style.css">
+    <script defer
+            src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
-    <div id="app">
-        <div id="app-header">
-            <h1>ToDo List Vanilla</h1>
-        </div>
-        <div id="app-container">
-
-            <div id="forms-container">
-                <form id="create-task-form">
-                    <fieldset>
-                        <legend>➕ Crear nueva tarea</legend>
-                        <label for="create-task-input">Título:</label>
-                        <input type="text"
-                               name="taskTitle"
-                               id="create-task-input"
-                               required>
-                        <button type="submit"
-                                id="addTaskBtn">Añadir</button>
-                    </fieldset>
-                </form>
-
-                <form id="filter-tasks-form">
-                    <fieldset>
-                        <legend>Filtros</legend>
-                        <div>
-                            <label for="filter-search">🔎</label>
-                            <input type="text"
-                                   name="filterSearch"
-                                   id="filter-search"
-                                   placeholder="buscar...">
-                        </div>
-                        <div>
-                            <input type="checkbox"
-                                   id="filter-hide-completed">
-                            <label for="filter-hide-completed">Ocultar completadas</label>
-                        </div>
-                        <div>
-                            <input type="checkbox"
-                                   id="filter-sort-status">
-                            <label for="filter-sort-status">Ordenar por estado</label>
-                        </div>
-                        <div>
-                            <input type="checkbox"
-                                   id="filter-sort-title">
-                            <label for="filter-sort-title">Ordenar alfabéticamente</label>
-                        </div>
-                        <button type="reset"
-                                id="filter-reset-button">Limpiar</button>
-                    </fieldset>
-                </form>
+    <div class="container-fluid vh-100 mh-100 overflow-hidden d-flex flex-column flex-md-row gap-2"
+         id="app">
+            <div class="d-flex flex-column gap-3 col-md-5 col-xl-4 col-sm-12 py-4 px-3"
+                 id="forms-container">
+                <!-- CREATE TASK FORM -->
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title"><i class="bi bi-file-earmark-plus"></i> Crear nueva tarea</h4>
+                        <form id="create-task-form" action="">
+                            <fieldset class="d-flex flex-column gap-3">
+                                <div class="input-group input-group-sm has-validation">
+                                    <span class="input-group-text"><i class="bi bi-check"></i></span>
+                                    <div class="form-floating">
+                                        <input type="search"
+                                               class="form-control search"
+                                               placeholder="Título de la tarea"
+                                               name="taskTitle"
+                                               id="create-task-input"
+                                               required>
+                                        <label class="form-label"
+                                               for="create-task-input">Título</label>
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        El título es obligatorio
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-3 justify-content-end">
+                                    <button type="button"
+                                            class="btn btn-sm"
+                                            id="add-task-options">Más opciones</button>
+                                    <button type="submit"
+                                            class="btn btn-primary"
+                                            id="addTaskBtn">Añadir</button>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+                <!-- FILTER TASK LIST FORM -->
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title"><i class="bi bi-funnel"></i> Filtros</h4>
+                        <form id="filter-tasks-form">
+                            <fieldset class="d-flex flex-column gap-3">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                    <div class="form-floating">
+                                        <input type="text"
+                                               class="form-control"
+                                               placeholder="Buscar por título"
+                                               name="filterSearch"
+                                               id="filter-search">
+                                        <label class="form-label"
+                                               for="filter-search">Buscar</label>
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox"
+                                           id="filter-hide-completed">
+                                    <label class="form-check-label" for="filter-hide-completed"><i class="bi bi-eye-slash"></i> Ocultar completadas</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox"
+                                           id="filter-sort-status">
+                                    <label class="form-check-label" for="filter-sort-status"><i class="bi bi-check-all"></i> Ordenar por estado</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox"
+                                           id="filter-sort-priority">
+                                    <label class="form-check-label" for="filter-sort-priority"><i class="bi bi-sort-down"></i> Ordenar por prioridad</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox"
+                                           id="filter-sort-title">
+                                    <label class="form-check-label" for="filter-sort-title"><i class="bi bi-sort-alpha-down"></i> Ordenar alfabéticamente</label>
+                                </div>
+                                <button type="reset"
+                                        class="btn btn-secondary btn-sm align-self-end"
+                                        id="filter-reset-button"><i class="bi bi-recycle"></i> Limpiar</button>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
             </div>
 
-            <div id="task-list">
+            <div class="w-100 order-md-first order-sm-last mh-100 overflow-auto py-4 px-3"
+                 id="task-list">
             </div>
-        </div>
     </div>
-    <div class="modal" id="modal">
-        <div class="modal-content">
-            <div class="modal-body">
-                <!-- Here will be the content of the modal window -->
-            </div>
-        </div>
+    <!-- BOOTSTRAP MODAL -->
+    <div class="modal"
+         tabindex="-1"
+         id="modal">
+         <!-- dynamic content -->
     </div>
 </body>
 

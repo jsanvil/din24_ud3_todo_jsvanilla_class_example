@@ -1,24 +1,20 @@
 import Task from './Task.js'
 
 class TaskList extends Array {
-
-  constructor() {
-    super()
+  async save () {
+    await window.bridge.saveList(this)
   }
 
-  save() {
-    window.bridge.saveList(this)
-  }
-
-  load() {
-    window.bridge.loadList().then(taskList => {
+  async load () {
+    await window.bridge.loadList().then(taskList => {
       if (taskList) {
-        this.length = 0
+        while (this.length > 0) {
+          this.pop()
+        }
         taskList.forEach(task => this.push(new Task(task)))
       }
     })
   }
-
 }
 
 export default TaskList
