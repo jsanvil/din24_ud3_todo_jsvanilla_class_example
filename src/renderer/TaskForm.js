@@ -34,10 +34,12 @@ class TaskForm {
 
   createTaskForm (parentModalElement) {
     parentModalElement.innerHTML = `
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title text-truncate">${this.isEditing ? 'Editar tarea "' + this.task.title + '"' : 'Nueva tarea'}
+            <h5 class="modal-title text-truncate">${
+              this.isEditing ? 'Editar tarea "' + this.task.title + '"' : 'Nueva tarea'
+            }
             </h5>
           </div>
           <div class="modal-body">
@@ -67,7 +69,9 @@ class TaskForm {
         <div class="col-form-label col-sm-3"></div>
         <div class="col-sm-9">
           <div class="form-check">
-            <input class="form-check-input" id="task-status" type="checkbox" name="status" ${this.task.done ? 'checked' : ''}>
+            <input class="form-check-input" id="task-status" type="checkbox" name="status" ${
+              this.task.done ? 'checked' : ''
+            }>
             <label class="form-check-label" for="task-status">Completada</label>
           </div>
         </div>

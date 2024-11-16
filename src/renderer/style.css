@@ -1,3 +1,14 @@
+:root {
+  
+  &[data-bs-theme="dark"] {
+    --bs-body-bg: #334;
+  }
+
+  &[data-bs-theme="light"] {
+    --bs-body-bg: #fffffa;
+  }
+}
+
 body {
   /* desactivar la selección de texto */
   user-select: none;
@@ -5,6 +16,11 @@ body {
 
 input {
   user-select: text;
+}
+
+/* fix task text overflow */
+.dashboard-content {
+  min-width: 450px;
 }
 
 #task-list {
@@ -23,7 +39,7 @@ input {
     }
     &:has(.task-status-done) {
       opacity: 0.6;
-      
+
       & .card {
         border-style: dashed;
       }
@@ -50,6 +66,7 @@ input {
 
   & .card {
     transition: background-color 0.3s;
+    transition: transform 0.3s;
 
     & button {
       opacity: 0;
@@ -57,11 +74,45 @@ input {
     }
 
     &:hover {
-      background-color: #0003;
+      background-color: #0001;
+      box-shadow: 0 2px 2px 0 #0007;
+      transform: scale(1.01);
 
       & button {
         opacity: 1;
       }
     }
+  }
+}
+
+#side-nav {
+  --td-nav-w: 350px;
+  width: var(--td-nav-w);
+  min-width: var(--td-nav-w);
+  background-color: color-mix(in srgb, var(--bs-body-bg), black 5%);
+}
+
+#btn-open-sidebar,
+#btn-close-sidebar {
+  visibility: hidden;
+}
+
+@media (max-width: 767px) {
+  #side-nav {
+    margin-right: calc(var(--td-nav-w) * -1);
+    position: absolute;
+    right: 0;
+    min-height: 100vh;
+    z-index: 1;
+    transition: margin-right 0.3s;
+
+    &.active {
+      margin-right: 0px;
+    }
+  }
+
+  #btn-open-sidebar,
+  #btn-close-sidebar {
+    visibility: visible;
   }
 }

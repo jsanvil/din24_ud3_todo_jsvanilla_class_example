@@ -25,6 +25,9 @@ const filterResetButton = document.getElementById('filter-reset-button')
 const filterSortByStatusInput = document.getElementById('filter-sort-status')
 const filterSortByPriority = document.getElementById('filter-sort-priority')
 const filterSortByTitle = document.getElementById('filter-sort-title')
+const sidebar = document.getElementById('side-nav')
+const btnOpenSidebar = document.getElementById('btn-open-sidebar')
+const btnCloseSidebar = document.getElementById('btn-close-sidebar')
 
 // EVENTOS
 
@@ -89,6 +92,14 @@ filterSortByPriority.addEventListener('change', (e) => {
 filterSortByTitle.addEventListener('change', (e) => {
   taskListView.filters.orderByTitle = !!e.target.checked
   taskListView.updateFilteredList()
+})
+
+btnOpenSidebar.addEventListener('click', () => {
+  sidebar.classList.add('active')
+})
+
+btnCloseSidebar.addEventListener('click', () => {
+  sidebar.classList.remove('active')
 })
 
 // EVENTOS DE IPC

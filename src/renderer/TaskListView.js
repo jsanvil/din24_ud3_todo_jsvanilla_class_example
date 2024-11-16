@@ -71,12 +71,14 @@ class TaskListView {
     this.taskListContainer.innerHTML = ''
     let taskListContents
     if (this.taskList.length === 0 || this.filteredTaskList.length === 0) {
-      taskListContents = document.createElement('p')
-      taskListContents.classList.add('text-muted')
+      this.taskListContainer.innerHTML = `
+      <div class="fs-4 d-flex flex-column justify-content-center align-items-center">
+      </div>
+      `
       if (this.taskList.length === 0) {
-        taskListContents.textContent = 'No hay tareas'
+        this.taskListContainer.firstElementChild.innerHTML = '<p class="align-self-end">👉</p><p class="fw-light fst-italic">Lista de tareas vacía</p>'
       } else {
-        taskListContents.textContent = 'No hay tareas que coincidan con la búsqueda'
+        this.taskListContainer.firstElementChild.innerHTML = '<p class="fw-light fst-italic">No hay tareas que coincidan con los filtros</p>'
       }
     } else {
       taskListContents = document.createElement('ul')
@@ -85,8 +87,8 @@ class TaskListView {
         const taskView = new TaskView(task, this)
         taskListContents.appendChild(taskView.createElement())
       })
+      this.taskListContainer.appendChild(taskListContents)
     }
-    this.taskListContainer.appendChild(taskListContents)
   }
 
   updateFilteredList () {

@@ -31,8 +31,8 @@ class TaskView {
         <input class="form-check form-check-inline form-check-input" type="checkbox" ${this.task.done ? 'checked' : ''
           }>
         <span class="flex-grow-1 text-truncate task-title ${this.task.done ? 'task-status-done' : ''}">${this.task.title}</span>
-        <button class="btn btn-sm edit-task" title="Editar"><i class="bi bi-pencil-fill"></i></button>
-        <button class="btn btn-sm delete-task" title="Borrar"><i class="bi bi-trash3-fill "></i></button>
+        <button class="btn btn-sm edit-task" title="Editar"><i class="bi bi-pencil"></i></button>
+        <button class="btn btn-sm delete-task" title="Borrar"><i class="bi bi-x-circle "></i></button>
       </div>
     </div>
     `
