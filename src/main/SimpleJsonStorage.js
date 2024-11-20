@@ -6,15 +6,6 @@ class SimpleJsonStorage {
       throw new Error('El nombre del archivo es inválido')
     }
 
-    // read permissions
-    if (fs.accessSync(filename, fs.constants.R_OK)) {
-      throw new Error(`Faltan permisos de lectura -> ${filename}`)
-    }
-
-    if (fs.accessSync(filename, fs.constants.W_OK)) {
-      throw new Error(`Faltan permisos de escritura -> ${filename}`)
-    }
-
     this.filename = filename
   }
 

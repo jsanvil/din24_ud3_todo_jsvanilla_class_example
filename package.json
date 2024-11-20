@@ -2,18 +2,45 @@
   "name": "din24_todo_js_vanilla",
   "version": "1.0.0",
   "description": "Aplicación ToDo List con Javascript vanilla y Electron",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron ./src/main/main.js"
-  },
+  "main": "src/main/main.js",
   "author": "",
   "license": "ISC",
+  "scripts": {
+    "start": "electron src/main/main.js",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "org.abastos.din24.todo-js-vanilla",
+    "productName": "ToDo List",
+    "icon": "src/assets/icon.png",
+    "asar": true,
+    "files": [
+      "src/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "src/assets"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "src/assets/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "src/assets/icon.png"
+    },
+    "publish": null
+  },
   "dependencies": {
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3"
   },
   "devDependencies": {
     "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
     "electron-reloader": "^1.2.3",
     "standard": "^17.1.2"
   },
