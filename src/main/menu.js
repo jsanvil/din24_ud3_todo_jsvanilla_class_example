@@ -1,6 +1,6 @@
 const { app, Menu, nativeTheme } = require('electron')
 
-function setMainMenu (win) {
+function setMainMenu (win, settingsStorage) {
   const template = [
     {
       label: 'ToDo',
@@ -21,6 +21,7 @@ function setMainMenu (win) {
           click: () => {
             win.webContents.send('update-theme', 'dark')
             nativeTheme.themeSource = 'dark'
+            settingsStorage.write({ theme: 'dark' })
           }
         },
         {
@@ -28,6 +29,7 @@ function setMainMenu (win) {
           click: () => {
             win.webContents.send('update-theme', 'light')
             nativeTheme.themeSource = 'light'
+            settingsStorage.write({ theme: 'light' })
           }
         },
         ...(app.isPackaged ? [] : [{ type: 'separator' }, { role: 'reload' }, { role: 'toggledevtools' }])

@@ -1,7 +1,8 @@
-const { app, BrowserWindow, ipcMain, dialog, Menu, MenuItem, nativeTheme } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog, nativeTheme } = require('electron')
 const { join } = require('node:path')
-const TaskStorage = require('./TaskStorage')
+const SimpleJsonStorage = require('./SimpleJsonStorage')
 const setMainMenu = require('./menu')
+const ContextMenu = require('./ContextMenu')
 
 // Recargar la aplicación cuando se modifique el código (hot reload)
 try {
@@ -15,54 +16,58 @@ try {
 nativeTheme.themeSource = 'dark'
 
 let win
+let settingsStorage
 
 // Función para crear la ventana principal
 const createWindow = () => {
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1000,
+    height: 650,
     webPreferences: {
       preload: join(__dirname, '../renderer/preload.js')
     }
   })
 
-  win.maximize()
+  // win.maximize()
 
   win.loadFile(join(__dirname, '../renderer/index.html'))
 
   // cut, copy, paste
+  const contextMenu = new ContextMenu(win)
+  win.webContents.on('context-menu', contextMenu.callback.bind(contextMenu))
 
-  function contextMenu (event) {
-    const contextMenu = new Menu()
+  settingsStorage ||= new SimpleJsonStorage(join(app.getPath('userData'), 'settings.json'))
+  setMainMenu(win, settingsStorage)
+}
 
-    contextMenu.append(new MenuItem({ label: 'Cortar', role: 'cut' }))
-    contextMenu.append(new MenuItem({ label: 'Copiar', role: 'copy' }))
-    contextMenu.append(new MenuItem({ label: 'Pegar', role: 'paste' }))
-
-    contextMenu.popup({ window: win, x: event.x, y: event.y })
+async function loadSettings (settingsStorage) {
+  const settings = await settingsStorage.read({ theme: nativeTheme.themeSource })
+  if (settings.theme) {
+    nativeTheme.themeSource = settings.theme
+    win.webContents.send('update-theme', settings.theme)
   }
-
-  win.webContents.on('context-menu', (event, params) => {
-    contextMenu(params)
-  })
-
-  setMainMenu(win)
 }
 
 // Crear la ventana cuando la aplicación esté lista
 app.whenReady().then(() => {
+  createWindow()
+
   const userAppDir = app.getPath('userData')
   const tasksFile = 'tasks.json'
-  const store = new TaskStorage(join(userAppDir, tasksFile))
+  const taskStorage = new SimpleJsonStorage(join(userAppDir, tasksFile))
+
+  win.webContents.on('did-finish-load', async () => {
+    loadSettings(settingsStorage)
+  })
 
   // Escuchar eventos de IPC
 
   ipcMain.handle('store:load-list', async () => {
-    return store.read()
+    return taskStorage.read()
   })
 
   ipcMain.handle('store:save-list', async (event, list) => {
-    store.write(list)
+    taskStorage.write(list)
     return true
   })
 
@@ -77,8 +82,6 @@ app.whenReady().then(() => {
     }).then(result => result)
     return result
   })
-
-  createWindow()
 
   // Cuando se active la aplicación y no haya ventanas, crear una nueva
   app.on('activate', () => {
