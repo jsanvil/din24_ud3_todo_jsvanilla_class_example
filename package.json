@@ -7,13 +7,16 @@
   "license": "ISC",
   "scripts": {
     "start": "electron src/main/main.js",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux",
+    "lint": "standard --fix",
+    "doc": "jsdoc -c jsdoc.json"
   },
   "build": {
     "appId": "org.abastos.din24.todo-js-vanilla",
     "productName": "ToDo List",
     "icon": "src/assets/icon.png",
-    "asar": true,
     "files": [
       "src/**/*",
       "node_modules/**/*",
@@ -23,14 +26,16 @@
       "buildResources": "src/assets"
     },
     "win": {
-      "target": "nsis",
-      "icon": "src/assets/icon.ico"
+      "target": [
+        "portable",
+        "nsis"
+      ]
     },
     "linux": {
       "target": [
         "AppImage"
       ],
-      "icon": "src/assets/icon.png"
+      "category": "Utility"
     },
     "publish": null
   },
@@ -42,9 +47,16 @@
     "electron": "^33.2.0",
     "electron-builder": "^25.1.8",
     "electron-reloader": "^1.2.3",
+    "jsdoc": "^4.0.4",
     "standard": "^17.1.2"
   },
   "eslintConfig": {
     "extends": "standard"
+  },
+  "standard": {
+    "ignore": [
+      "dist/",
+      "src/assets/"
+    ]
   }
 }

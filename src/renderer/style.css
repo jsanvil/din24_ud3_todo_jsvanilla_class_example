@@ -1,4 +1,5 @@
 :root {
+  /* Sobreescribir estilos de Bootstrap */
   
   &[data-bs-theme="dark"] {
     --bs-body-bg: #334;
@@ -10,11 +11,15 @@
 }
 
 body {
-  /* desactivar la selección de texto */
+  /*
+    Desactivar la selección de texto
+    sería extraño seleccionar cualquier texto de la interfaz en una aplicación de escritorio
+  */
   user-select: none;
 }
 
 input {
+  /* Habilitar la selección de texto en los inputs */
   user-select: text;
 }
 

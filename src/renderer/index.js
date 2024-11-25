@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Punto de entrada del proceso renderizado de Electron
+ *
+ * Gestiona la lógica de la interfaz de usuario.
+ */
+
 import Task from './Task.js'
 import TaskForm from './TaskForm.js'
 import TaskListView from './TaskListView.js'
@@ -8,7 +14,16 @@ const taskListView = new TaskListView()
 taskListView.loadList().then(() => {
   addTaskOptions.addEventListener('click', (e) => {
     const newTask = new Task({ title: taskTitleInput.value })
-    const taskForm = new TaskForm(newTask, taskListView)
+    const taskForm = new TaskForm({
+      task: newTask,
+      idNew: true,
+      onSubmit: (task) => {
+        taskListView.addTask(task)
+        taskListView.saveList()
+      },
+      modalElement: modalRootElement
+    })
+
     taskForm.show()
     taskTitleInput.value = ''
   })
@@ -28,6 +43,7 @@ const filterSortByTitle = document.getElementById('filter-sort-title')
 const sidebar = document.getElementById('side-nav')
 const btnOpenSidebar = document.getElementById('btn-open-sidebar')
 const btnCloseSidebar = document.getElementById('btn-close-sidebar')
+const modalRootElement = document.getElementById('modal')
 
 // EVENTOS
 
@@ -53,6 +69,7 @@ newTaskForm.addEventListener('submit', (e) => {
   taskListView.saveList()
 }, false)
 
+// evento del botón de restablecer filtros
 filterResetButton.addEventListener('click', () => {
   taskListView.filters = {
     search: '',
@@ -94,16 +111,19 @@ filterSortByTitle.addEventListener('change', (e) => {
   taskListView.updateFilteredList()
 })
 
+// abrir la barra lateral
 btnOpenSidebar.addEventListener('click', () => {
   sidebar.classList.add('active')
 })
 
+// cerrar la barra lateral
 btnCloseSidebar.addEventListener('click', () => {
   sidebar.classList.remove('active')
 })
 
 // EVENTOS DE IPC
 
+// evento para cambiar el tema
 window.bridge.onUpdateTheme((event, theme) => {
   document.documentElement.setAttribute('data-bs-theme', theme)
 })

@@ -1,6 +1,4 @@
 /**
- * Clase TaskView
- *
  * Representa la vista de una tarea dentro del listado
  *
  * Se encarga de renderizar una tarea y de gestionar los eventos
@@ -37,7 +35,7 @@ class TaskView {
     </div>
     `
 
-    // añadir eventos
+    // EVENTOS
 
     // evento editar
     newTask.querySelector('.edit-task').addEventListener('click', (e) => {

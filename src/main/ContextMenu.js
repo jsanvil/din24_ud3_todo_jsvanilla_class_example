@@ -1,10 +1,25 @@
 const { Menu, MenuItem } = require('electron')
 
+/**
+ * Módulo para mostrar menús contextuales
+ * @module ContextMenu
+ */
+
+/**
+ * Clase para mostrar menús contextuales
+ */
 class ContextMenu {
+  /**
+   * @param {BrowserWindow} win - Ventana en la que se mostrará el menú contextual
+  */
   constructor (win) {
     this.win = win
   }
 
+  /**
+   * Muestra un menú contextual para texto seleccionado
+   * @param {Object} params - Parámetros del menú contextual
+   */
   showTextClipboardMenu (params) {
     const contextMenu = new Menu()
 

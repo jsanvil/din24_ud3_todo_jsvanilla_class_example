@@ -14,10 +14,28 @@ Instalar dependencias:
 npm install
 ```
 
-Ejecutar la aplicación:
+Ejecutar la aplicación en modo desarrollo:
 
 ```bash
 npm start
+```
+
+Crear ejecutables en `/dist` para Windows, Linux:
+
+```bash
+npm run build
+```
+
+Crear ejecutables para Windows:
+
+```bash
+npm run build:win
+```
+
+Crear ejecutables para Linux:
+
+```bash
+npm run build:linux
 ```
 
 ## Frameworks y librerías
@@ -26,7 +44,9 @@ npm start
 - [**Bootstrap**](https://getbootstrap.com/): Framework CSS para maquetación y estilos
 - [**Bootstrap Icons**](https://icons.getbootstrap.com/): Iconos de Bootstrap
 - [**electron-reloader**](https://github.com/sindresorhus/electron-reloader): _Hot reload_ para Electron
+- [**electron-builder**](https://www.electron.build/): Creación de ejecutables de Electron
 - [**standard**](https://github.com/standard/standard): Linter de Javascript
+- [**jsdoc**](https://jsdoc.app/): Documentación de código
 
 ## Estructura
 
@@ -37,6 +57,8 @@ El código de la aplicación se encuentra en la carpeta `src/`, estructurada de 
     - `main.js`: Proceso principal de Electron
     - `TaskStorage.js`: Almacenamiento en formato JSON
     - `menu.js`: Menú de la aplicación
+    - `ContextMenu.js`: Menú contextual de la aplicación
+    - `ipcEvents`: Mensajes para la comunicación entre procesos
   - `renderer\`
     - `preload.js`: Gestión de la comunicación entre el proceso principal y el proceso de renderizado
     - `index.js`: Código de la página principal. Controla eventos de formularios, se podría dividir en varios ficheros

@@ -1,19 +1,31 @@
+import Task from './Task.js'
+
+/**
+ * Componente para crear y editar tareas
+ */
 class TaskForm {
   isEditing = false
 
-  constructor (task, taskListView) {
-    if (taskListView.taskList.includes(task)) {
-      this.isEditing = true
-    }
-    this.task = task
-    this.taskListView = taskListView
-    this.modalRootElement = document.getElementById('modal')
+  /**
+   * Crea una instancia de TaskForm
+   * @param {Task} task - Tarea a crear o editar
+   * @param {TaskListView} taskListView - Lista de tareas a la que pertenece
+   */
+  constructor (props) {
+    this.task = props.task || new Task()
+    this.isEditing = !props.isNew
+    this.onSubmit = props.onSubmit || (() => {})
+    this.modalElement = props.modalRootElement || document.getElementById('modal')
   }
 
+  /**
+   * Obtiene la instancia de bootstrap.Modal
+   * @returns {bootstrap.Modal}
+   */
   getModal () {
     if (!this.modal) {
       // eslint-disable-next-line no-undef
-      this.modal = new bootstrap.Modal(this.modalRootElement, {
+      this.modal = new bootstrap.Modal(this.modalElement, {
         focus: true,
         keyboard: false,
         backdrop: 'static'
@@ -22,17 +34,28 @@ class TaskForm {
     return this.modal
   }
 
+  /**
+   * Muestra el formulario
+   */
   show () {
-    this.createTaskForm(this.modalRootElement)
+    this.createTaskForm(this.modalElement)
     this.getModal().show()
   }
 
+  /**
+   * Oculta el formulario
+   */
   hide () {
     this.getModal().hide()
-    this.modalRootElement.querySelector('.modal-body').innerHTML = ''
+    this.modalElement.querySelector('.modal-body').innerHTML = ''
   }
 
+  /**
+   * Crea el formulario para añadir o editar una tarea
+   * @param {HTMLElement} parentModalElement - Elemento padre del modal
+   */
   createTaskForm (parentModalElement) {
+    // Crea la estructura básica del modal (cabecera, cuerpo y pie)
     parentModalElement.innerHTML = `
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -53,14 +76,17 @@ class TaskForm {
         </div>
       </div>`
 
+    // Crear el formulario de la tarea con los campos necesarios dentro de "modal-body"
     const modalBody = parentModalElement.querySelector('.modal-body')
+
+    const titlePattern = '.*\\S.*' // Patrón utilizado para validar el título, al menos un carácter sin espacios
 
     modalBody.innerHTML = `
     <form id="task-form" class="needs-validation" novalidate>
       <div class="row mb-3">
         <label class="col-sm-3 col-form-label" for="task-title">Título</label>
         <div class="col-sm-9">
-          <input class="form-control" id="task-title" type="text" name="title" placeholder="título" pattern=".*\S.*"
+          <input class="form-control" id="task-title" type="text" name="title" placeholder="título" pattern="${titlePattern}"
             value="${this.task.title.trim()}" required>
           <span class="invalid-feedback">El título es necesario</span>
         </div>
@@ -104,6 +130,8 @@ class TaskForm {
     this.btnSave = parentModalElement.querySelector('#submit-task-form')
     this.btnClose = parentModalElement.querySelector('#cancel-task-form')
 
+    // Seleccionar el título al abrir el formulario
+    // (utiliza setTimeout para asegurar de que el elemento esté cargado en el DOM)
     setTimeout(() => {
       this.title.focus()
       this.title.select()
@@ -126,10 +154,7 @@ class TaskForm {
       this.task.priority = this.priority.selectedIndex
       this.task.description = this.description.value.trim()
 
-      if (!this.isEditing) {
-        this.taskListView.addTask(this.task)
-      }
-      this.taskListView.saveList()
+      this.onSubmit(this.task)
 
       this.hide()
     })
