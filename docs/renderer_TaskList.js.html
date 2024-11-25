@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: renderer/TaskList.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: renderer/TaskList.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import Task from './Task.js'
+
+/**
+ * Modelo de lista de tareas, extiende de Array
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array|Array}
+ */
+class TaskList extends Array {
+  /**
+   * Envía el evento para guardar la lista de tareas en el proceso principal
+   * @returns {Promise&lt;void>}
+   */
+  async save () {
+    await window.bridge.saveList(this)
+  }
+
+  /**
+   * Envía el evento para cargar la lista de tareas desde el proceso principal
+   * @returns {Promise&lt;void>}
+   */
+  async load () {
+    await window.bridge.loadList().then(taskList => {
+      if (taskList) {
+        while (this.length > 0) {
+          this.pop()
+        }
+        taskList.forEach(task => this.push(new Task(task)))
+      }
+    })
+  }
+
+  /**
+   * Filtra las tareas por estado y devuelve una nueva TaskList
+   * @param {Boolean} status - Estado de la tarea (true = completada, false = pendiente)
+   * @returns {TaskList} Lista de tareas filtrada por estado
+   */
+  filterByStatus (status) {
+    return this.filter(task => task.done !== status)
+  }
+
+  /**
+   * Filtra las tareas por prioridad y devuelve una nueva TaskList
+   * @param {Number} priority - Prioridad de la tarea (0 = baja, 1 = media, 2 = alta)
+   * @returns {TaskList} Lista de tareas filtrada por prioridad
+   */
+  filterByPriority (priority, asc = true) {
+    return this.filter(task => task.priority === priority)
+  }
+
+  /**
+   * Filtra las tareas por título y devuelve una nueva TaskList
+   * @param {String} searchPattern - String to search in task titles
+   * @returns {TaskList} List of tasks filtered by title
+   */
+  filterByTitle (searchPattern) {
+    return this.filter(task => task.title.toLowerCase().includes(searchPattern.toLowerCase()))
+  }
+
+  /**
+   * Ordena las tareas por título y devuelve una nueva TaskList
+   * @param {Boolean} asc - Ordenar en orden ascendente (true) o descendente (false)
+   * @returns {TaskList} Lista de tareas ordenada
+   * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSorted
+   */
+  sortByTitle (asc = true) {
+    return this.toSorted((a, b) => {
+      if (asc) {
+        return a.title.localeCompare(b.title)
+      } else {
+        return b.title.localeCompare(a.title)
+      }
+    })
+  }
+
+  /**
+   * Ordena las tareas por prioridad y devuelve una nueva TaskList
+   * @param {Boolean} asc - Ordenar en orden ascendente (true) o descendente (false)
+   * @returns {TaskList} Lista de tareas ordenada
+   * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSorted
+   */
+  sortByPriority (asc = false) {
+    return this.toSorted((a, b) => {
+      if (asc) {
+        return a.priority - b.priority
+      } else {
+        return b.priority - a.priority
+      }
+    })
+  }
+
+  /**
+   * Ordena las tareas por estado y devuelve una nueva TaskList
+   * @param {Boolean} asc - Ordenar en orden ascendente (true) o descendente (false)
+   * @returns {TaskList} Lista de tareas ordenada
+   * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSorted
+   */
+  sortByStatus (asc = true) {
+    return this.toSorted((a, b) => {
+      if (asc) {
+        return a === b ? 0 : a ? -1 : 1
+      } else {
+        return a === b ? 0 : a ? 1 : -1
+      }
+    })
+  }
+
+  /**
+   * Ordena las tareas por fecha de creación y devuelve una nueva TaskList
+   * @param {Boolean} asc - Ordenar en orden ascendente (true) o descendente (false)
+   * @returns {TaskList} Lista de tareas ordenada
+   * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSorted
+   */
+  sortByCreationDate (asc = true) {
+    return this.toSorted((a, b) => {
+      if (asc) {
+        return a.id - b.id
+      } else {
+        return b.id - a.id
+      }
+    })
+  }
+}
+
+export default TaskList
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ContextMenu.html">ContextMenu</a></li><li><a href="module-SimpleJsonStorage.html">SimpleJsonStorage</a></li><li><a href="module-main_ipcEvents.html">main/ipcEvents</a></li><li><a href="module-menu.html">menu</a></li></ul><h3>Classes</h3><ul><li><a href="Task.html">Task</a></li><li><a href="TaskForm.html">TaskForm</a></li><li><a href="TaskList.html">TaskList</a></li><li><a href="TaskListView.html">TaskListView</a></li><li><a href="TaskView.html">TaskView</a></li><li><a href="module-ContextMenu-ContextMenu.html">ContextMenu</a></li><li><a href="module-SimpleJsonStorage-SimpleJsonStorage.html">SimpleJsonStorage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#confirmDeleteTask">confirmDeleteTask</a></li><li><a href="global.html#loadList">loadList</a></li><li><a href="global.html#loadSettings">loadSettings</a></li><li><a href="global.html#onUpdateTheme">onUpdateTheme</a></li><li><a href="global.html#saveList">saveList</a></li><li><a href="global.html#settingsStorage">settingsStorage</a></li><li><a href="global.html#win">win</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Nov 25 2024 12:06:01 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

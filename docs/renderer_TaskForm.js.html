@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: renderer/TaskForm.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: renderer/TaskForm.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import Task from './Task.js'
+
+/**
+ * Componente para crear y editar tareas
+ */
+class TaskForm {
+  isEditing = false
+
+  /**
+   * Crea una instancia de TaskForm
+   * @param {Task} task - Tarea a crear o editar
+   * @param {TaskListView} taskListView - Lista de tareas a la que pertenece
+   */
+  constructor (props) {
+    this.task = props.task || new Task()
+    this.isEditing = !props.isNew
+    this.onSubmit = props.onSubmit || (() => {})
+    this.modalElement = props.modalRootElement || document.getElementById('modal')
+  }
+
+  /**
+   * Obtiene la instancia de bootstrap.Modal
+   * @returns {bootstrap.Modal}
+   */
+  getModal () {
+    if (!this.modal) {
+      // eslint-disable-next-line no-undef
+      this.modal = new bootstrap.Modal(this.modalElement, {
+        focus: true,
+        keyboard: false,
+        backdrop: 'static'
+      })
+    }
+    return this.modal
+  }
+
+  /**
+   * Muestra el formulario
+   */
+  show () {
+    this.createTaskForm(this.modalElement)
+    this.getModal().show()
+  }
+
+  /**
+   * Oculta el formulario
+   */
+  hide () {
+    this.getModal().hide()
+    this.modalElement.querySelector('.modal-body').innerHTML = ''
+  }
+
+  /**
+   * Crea el formulario para añadir o editar una tarea
+   * @param {HTMLElement} parentModalElement - Elemento padre del modal
+   */
+  createTaskForm (parentModalElement) {
+    // Crea la estructura básica del modal (cabecera, cuerpo y pie)
+    parentModalElement.innerHTML = `
+      &lt;div class="modal-dialog modal-dialog-centered">
+        &lt;div class="modal-content">
+          &lt;div class="modal-header">
+            &lt;h5 class="modal-title text-truncate">${
+              this.isEditing ? 'Editar tarea "' + this.task.title + '"' : 'Nueva tarea'
+            }
+            &lt;/h5>
+          &lt;/div>
+          &lt;div class="modal-body">
+          &lt;/div>
+          &lt;div class="modal-footer">
+            &lt;button type="button" id="cancel-task-form" class="btn btn-secondary"
+              data-bs-dismiss="modal">Cancelar&lt;/button>
+            &lt;button type="button" id="submit-task-form" class="btn btn-primary"
+              id="modal-action-button">${this.isEditing ? 'Guardar' : 'Crear'}&lt;/button>
+          &lt;/div>
+        &lt;/div>
+      &lt;/div>`
+
+    // Crear el formulario de la tarea con los campos necesarios dentro de "modal-body"
+    const modalBody = parentModalElement.querySelector('.modal-body')
+
+    const titlePattern = '.*\\S.*' // Patrón utilizado para validar el título, al menos un carácter sin espacios
+
+    modalBody.innerHTML = `
+    &lt;form id="task-form" class="needs-validation" novalidate>
+      &lt;div class="row mb-3">
+        &lt;label class="col-sm-3 col-form-label" for="task-title">Título&lt;/label>
+        &lt;div class="col-sm-9">
+          &lt;input class="form-control" id="task-title" type="text" name="title" placeholder="título" pattern="${titlePattern}"
+            value="${this.task.title.trim()}" required>
+          &lt;span class="invalid-feedback">El título es necesario&lt;/span>
+        &lt;/div>
+      &lt;/div>
+      &lt;div class="row mb-3">
+        &lt;div class="col-form-label col-sm-3">&lt;/div>
+        &lt;div class="col-sm-9">
+          &lt;div class="form-check">
+            &lt;input class="form-check-input" id="task-status" type="checkbox" name="status" ${
+              this.task.done ? 'checked' : ''
+            }>
+            &lt;label class="form-check-label" for="task-status">Completada&lt;/label>
+          &lt;/div>
+        &lt;/div>
+      &lt;/div>
+      &lt;div class="row mb-3">
+        &lt;label class="col-sm-3 col-form-label" for="task-priority">Prioridad&lt;/label>
+        &lt;div class="col-sm-9">
+          &lt;select class="form-select" name="priority" id="task-priority">
+            &lt;option value="low" ${this.task.priority === 0 ? 'selected' : ''}>Baja&lt;/option>
+            &lt;option value="medium" ${this.task.priority === 1 ? 'selected' : ''}>Media&lt;/option>
+            &lt;option value="high" ${this.task.priority === 2 ? 'selected' : ''}>Alta&lt;/option>
+          &lt;/select>
+        &lt;/div>
+      &lt;/div>
+      &lt;div class="row mb-3">
+        &lt;label class="col-sm-3 col-form-label" for="task-description">Descripción&lt;/label>
+        &lt;div class="col-sm-9">
+          &lt;textarea class="form-control" id="task-description" name="description" placeholder="descripción"
+            value="${this.task.description}">&lt;/textarea>
+        &lt;/div>
+      &lt;/div>
+    &lt;form>
+    `
+
+    this.taskForm = modalBody.querySelector('#task-form')
+    this.title = modalBody.querySelector('#task-title')
+    this.status = modalBody.querySelector('#task-status')
+    this.priority = modalBody.querySelector('#task-priority')
+    this.description = modalBody.querySelector('#task-description')
+    this.btnSave = parentModalElement.querySelector('#submit-task-form')
+    this.btnClose = parentModalElement.querySelector('#cancel-task-form')
+
+    // Seleccionar el título al abrir el formulario
+    // (utiliza setTimeout para asegurar de que el elemento esté cargado en el DOM)
+    setTimeout(() => {
+      this.title.focus()
+      this.title.select()
+    }, 0)
+
+    this.btnSave.addEventListener('click', (e) => {
+      e.preventDefault()
+
+      this.taskForm.classList.add('was-validated')
+
+      // validar título
+      if (this.title.value.trim() === '') {
+        this.title.focus()
+        return
+      }
+
+      // guardar tarea
+      this.task.title = this.title.value.trim()
+      this.task.done = this.status.checked
+      this.task.priority = this.priority.selectedIndex
+      this.task.description = this.description.value.trim()
+
+      this.onSubmit(this.task)
+
+      this.hide()
+    })
+
+    this.btnClose.addEventListener('click', (e) => {
+      e.preventDefault()
+      this.hide()
+    })
+  }
+}
+
+export default TaskForm
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ContextMenu.html">ContextMenu</a></li><li><a href="module-SimpleJsonStorage.html">SimpleJsonStorage</a></li><li><a href="module-main_ipcEvents.html">main/ipcEvents</a></li><li><a href="module-menu.html">menu</a></li></ul><h3>Classes</h3><ul><li><a href="Task.html">Task</a></li><li><a href="TaskForm.html">TaskForm</a></li><li><a href="TaskList.html">TaskList</a></li><li><a href="TaskListView.html">TaskListView</a></li><li><a href="TaskView.html">TaskView</a></li><li><a href="module-ContextMenu-ContextMenu.html">ContextMenu</a></li><li><a href="module-SimpleJsonStorage-SimpleJsonStorage.html">SimpleJsonStorage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#confirmDeleteTask">confirmDeleteTask</a></li><li><a href="global.html#loadList">loadList</a></li><li><a href="global.html#loadSettings">loadSettings</a></li><li><a href="global.html#onUpdateTheme">onUpdateTheme</a></li><li><a href="global.html#saveList">saveList</a></li><li><a href="global.html#settingsStorage">settingsStorage</a></li><li><a href="global.html#win">win</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Nov 25 2024 12:06:01 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

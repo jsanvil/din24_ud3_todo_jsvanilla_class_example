@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: renderer/TaskListView.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: renderer/TaskListView.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import TaskList from './TaskList.js'
+import TaskView from './TaskView.js'
+import TaskForm from './TaskForm.js'
+
+/**
+ * Vista de la lista de tareas
+ */
+class TaskListView {
+  /**
+   * Crea una instancia de TaskListView
+   * @param {TaskList} taskList - Lista de tareas
+   */
+  constructor (taskList) {
+    /**
+     * Almacena la lista de tareas
+     * @type {TaskList}
+     */
+    this.taskList = taskList || new TaskList()
+
+    /**
+     * Lista de tareas filtrada
+     * @type {TaskList}
+    */
+    this.filteredTaskList = new TaskList()
+
+    /**
+     * Filtros de la lista de tareas
+     * @type {Object}
+     * @property {String} search - Título de la tarea a buscar
+     * @property {Boolean} hideCompleted - Ocultar tareas completadas
+     * @property {Boolean} orderByStatus - Ordenar por estado
+     * @property {Boolean} orderByPriority - Ordenar por prioridad
+     * @property {Boolean} orderByTitle - Ordenar por título
+     */
+    this.filters = {
+      search: '',
+      hideCompleted: false,
+      orderByStatus: false,
+      orderByPriority: false,
+      orderByTitle: false
+    }
+
+    /**
+     * Contenedor de la lista de tareas
+     * @type {HTMLElement}
+     */
+    this.taskListContainer = document.querySelector('#task-list')
+
+    // Evento de bootstrap.Modal
+    // al cerrar el modal se actualiza la lista de tareas
+    document.getElementById('modal').addEventListener('hidden.bs.modal', () => {
+      this.updateFilteredList()
+    })
+  }
+
+  /**
+   * Guarda la lista de tareas
+   * @returns {Promise&lt;void>}
+   */
+  async saveList () {
+    await this.taskList.save().then(() => {
+      this.updateFilteredList()
+    })
+  }
+
+  /**
+   * Carga la lista de tareas
+   * @returns {Promise&lt;void>}
+   */
+  async loadList () {
+    await this.taskList.load().then(() => {
+      this.updateFilteredList()
+    })
+  }
+
+  /**
+   * Añade una tarea a la lista
+   * @param {Task} task - Tarea a añadir
+   */
+  addTask (task) {
+    this.taskList.push(task)
+  }
+
+  /**
+   * Edita una tarea
+   * @param {Task} taskToEdit - Tarea a editar
+   */
+  editTask (taskToEdit) {
+    const taskForm = new TaskForm({
+      task: taskToEdit,
+      isNew: false,
+      onSubmit: () => this.saveList()
+    })
+    taskForm.show()
+  }
+
+  /**
+   * Elimina una tarea
+   * @param {Task} taskToRemove - Tarea a eliminar
+   * @returns {Promise&lt;void>}
+   */
+  async removeTask (taskToRemove) {
+    const confirmDelete = await window.bridge.confirmDeleteTask(taskToRemove)
+
+    if (confirmDelete.response === 1) {
+      this.taskList.splice(this.taskList.indexOf(taskToRemove), 1)
+      this.saveList()
+    }
+  }
+
+  /**
+   * Renderiza la lista de tareas
+   */
+  renderTaskList () {
+    this.taskListContainer.innerHTML = ''
+    let taskListContents
+
+    // si no hay tareas o no hay tareas que coincidan con los filtros
+    if (this.taskList.length === 0 || this.filteredTaskList.length === 0) {
+      this.taskListContainer.innerHTML = `
+      &lt;div class="fs-4 d-flex flex-column justify-content-center align-items-center">
+      &lt;/div>
+      `
+      if (this.taskList.length === 0) {
+        this.taskListContainer.firstElementChild.innerHTML = '&lt;p class="align-self-end">👉&lt;/p>&lt;p class="fw-light fst-italic">Lista de tareas vacía&lt;/p>'
+      } else {
+        this.taskListContainer.firstElementChild.innerHTML = '&lt;p class="fw-light fst-italic">No hay tareas que coincidan con los filtros&lt;/p>'
+      }
+    // si hay tareas que coinciden con los filtros
+    } else {
+      taskListContents = document.createElement('ul')
+      taskListContents.classList.add('d-flex', 'flex-column', 'gap-2')
+
+      this.filteredTaskList.forEach((task) => {
+        const taskView = new TaskView(task, this)
+        taskListContents.appendChild(taskView.createElement())
+      })
+
+      this.taskListContainer.appendChild(taskListContents)
+    }
+  }
+
+  /**
+   * Actualiza la lista de tareas filtrada
+   */
+  updateFilteredList () {
+    // filteredTaskList será la nueva lista de tareas filtrada
+    // utiliza Object.assign para crear una copia de la lista de tareas
+    this.filteredTaskList = Object.assign(new TaskList(), this.taskList)
+
+    // hide completed
+    if (this.filters.hideCompleted) {
+      this.filteredTaskList = this.filteredTaskList.filterByStatus(true)
+    }
+
+    // search by title
+    if (this.filters.search &amp;&amp; this.filters.search.trim().length > 0) {
+      this.filteredTaskList = this.filteredTaskList.filterByTitle(this.filters.search)
+    }
+
+    // order by title
+    if (this.filters.orderByTitle) {
+      this.filteredTaskList = this.filteredTaskList.sortByTitle()
+    }
+
+    // order by priority
+    if (this.filters.orderByPriority) {
+      this.filteredTaskList = this.filteredTaskList.sortByPriority()
+    }
+
+    // order by status
+    if (this.filters.orderByStatus) {
+      this.filteredTaskList = this.filteredTaskList.sortByStatus()
+    }
+
+    this.renderTaskList()
+  }
+}
+
+export default TaskListView
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ContextMenu.html">ContextMenu</a></li><li><a href="module-SimpleJsonStorage.html">SimpleJsonStorage</a></li><li><a href="module-main_ipcEvents.html">main/ipcEvents</a></li><li><a href="module-menu.html">menu</a></li></ul><h3>Classes</h3><ul><li><a href="Task.html">Task</a></li><li><a href="TaskForm.html">TaskForm</a></li><li><a href="TaskList.html">TaskList</a></li><li><a href="TaskListView.html">TaskListView</a></li><li><a href="TaskView.html">TaskView</a></li><li><a href="module-ContextMenu-ContextMenu.html">ContextMenu</a></li><li><a href="module-SimpleJsonStorage-SimpleJsonStorage.html">SimpleJsonStorage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#confirmDeleteTask">confirmDeleteTask</a></li><li><a href="global.html#loadList">loadList</a></li><li><a href="global.html#loadSettings">loadSettings</a></li><li><a href="global.html#onUpdateTheme">onUpdateTheme</a></li><li><a href="global.html#saveList">saveList</a></li><li><a href="global.html#settingsStorage">settingsStorage</a></li><li><a href="global.html#win">win</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Nov 25 2024 12:06:01 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

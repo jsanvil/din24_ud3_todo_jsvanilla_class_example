@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>main/main.js</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Módulo principal de la aplicación</p>
+<p>Gestiona la lógica del proceso principal de Electron, la ventana principal y los eventos IPC.</p></div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="main_main.js.html">main/main.js</a>, <a href="main_main.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>renderer/index.js</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Punto de entrada del proceso renderizado de Electron</p>
+<p>Gestiona la lógica de la interfaz de usuario.</p></div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="renderer_index.js.html">renderer/index.js</a>, <a href="renderer_index.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>renderer/preload.js</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Preload script</p>
+<p>El script de preload se ejecuta antes de que el script de la ventana principal (index.js)
+para exponer una API segura y controlada.</p>
+<p>Se podrá acceder a las funciones de este script desde el script
+de la ventana principal a través de <code>window.bridge</code>.</p></div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="renderer_preload.js.html">renderer/preload.js</a>, <a href="renderer_preload.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://www.electronjs.org/es/docs/latest/tutorial/tutorial-preload">https://www.electronjs.org/es/docs/latest/tutorial/tutorial-preload</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+        
+            <h3>Examples</h3>
+            
+    <pre class="prettyprint"><code>// Cargar la lista de tareas desde el script de la ventana principal (index.js)
+window.bridge.loadList().then(list => { ... })</code></pre>
+
+    <pre class="prettyprint"><code>// Escuchar el evento para actualizar el tema desde el script de la ventana principal (index.js)
+window.bridge.onUpdateTheme(theme => { ... })</code></pre>
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ContextMenu.html">ContextMenu</a></li><li><a href="module-SimpleJsonStorage.html">SimpleJsonStorage</a></li><li><a href="module-main_ipcEvents.html">main/ipcEvents</a></li><li><a href="module-menu.html">menu</a></li></ul><h3>Classes</h3><ul><li><a href="Task.html">Task</a></li><li><a href="TaskForm.html">TaskForm</a></li><li><a href="TaskList.html">TaskList</a></li><li><a href="TaskListView.html">TaskListView</a></li><li><a href="TaskView.html">TaskView</a></li><li><a href="module-ContextMenu-ContextMenu.html">ContextMenu</a></li><li><a href="module-SimpleJsonStorage-SimpleJsonStorage.html">SimpleJsonStorage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#confirmDeleteTask">confirmDeleteTask</a></li><li><a href="global.html#loadList">loadList</a></li><li><a href="global.html#loadSettings">loadSettings</a></li><li><a href="global.html#onUpdateTheme">onUpdateTheme</a></li><li><a href="global.html#saveList">saveList</a></li><li><a href="global.html#settingsStorage">settingsStorage</a></li><li><a href="global.html#win">win</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Nov 25 2024 12:06:01 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
