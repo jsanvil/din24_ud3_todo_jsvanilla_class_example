@@ -6,6 +6,8 @@ No utiliza _Web Components_ ni librerías. Se pretende aprender a realizar una a
 
 [Excalidraw Mockup](https://excalidraw.com/#json=gptaRL4eHX-SmJ2jUtAKO,t3J_YYwg44sg9BPhw6rWgQ)
 
+[Documentación en jsdoc](https://jsanvil.github.io/din24_ud3_todo_jsvanilla_class_example/)
+
 ## Ejecución
 
 Instalar dependencias:
