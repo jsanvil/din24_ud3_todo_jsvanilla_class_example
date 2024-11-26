@@ -1,3 +1,6 @@
+'use strict'
+// @ts-check
+
 const fs = require('fs')
 
 /**

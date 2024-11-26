@@ -1,5 +1,5 @@
 :root {
-  /* Sobreescribir estilos de Bootstrap */
+  /* Sobrescribir estilos de Bootstrap */
   
   &[data-bs-theme="dark"] {
     --bs-body-bg: #334;

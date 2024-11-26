@@ -1,3 +1,6 @@
+'use strict'
+// @ts-check
+
 import Task from './Task.js'
 
 /**
@@ -96,7 +99,7 @@ class TaskForm {
         <div class="col-sm-9">
           <div class="form-check">
             <input class="form-check-input" id="task-status" type="checkbox" name="status" ${
-              this.task.done ? 'checked' : ''
+              this.task.status ? 'checked' : ''
             }>
             <label class="form-check-label" for="task-status">Completada</label>
           </div>
@@ -150,7 +153,7 @@ class TaskForm {
 
       // guardar tarea
       this.task.title = this.title.value.trim()
-      this.task.done = this.status.checked
+      this.task.status = this.status.checked
       this.task.priority = this.priority.selectedIndex
       this.task.description = this.description.value.trim()
 

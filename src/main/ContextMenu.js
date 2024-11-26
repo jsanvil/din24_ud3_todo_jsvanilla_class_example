@@ -1,3 +1,6 @@
+'use strict'
+// @ts-check
+
 const { Menu, MenuItem } = require('electron')
 
 /**

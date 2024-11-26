@@ -1,3 +1,6 @@
+'use strict'
+// @ts-check
+
 import Task from './Task.js'
 
 /**
@@ -34,7 +37,7 @@ class TaskList extends Array {
    * @returns {TaskList} Lista de tareas filtrada por estado
    */
   filterByStatus (status) {
-    return this.filter(task => task.done !== status)
+    return this.filter(task => task.status !== status)
   }
 
   /**
@@ -62,7 +65,7 @@ class TaskList extends Array {
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSorted
    */
   sortByTitle (asc = true) {
-    return this.toSorted((a, b) => {
+    return this.sort((a, b) => {
       if (asc) {
         return a.title.localeCompare(b.title)
       } else {
@@ -78,7 +81,7 @@ class TaskList extends Array {
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSorted
    */
   sortByPriority (asc = false) {
-    return this.toSorted((a, b) => {
+    return this.sort((a, b) => {
       if (asc) {
         return a.priority - b.priority
       } else {
@@ -94,12 +97,11 @@ class TaskList extends Array {
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSorted
    */
   sortByStatus (asc = true) {
-    return this.toSorted((a, b) => {
+    return this.sort((a, b) => {
       if (asc) {
-        return a === b ? 0 : a ? -1 : 1
-      } else {
-        return a === b ? 0 : a ? 1 : -1
+        return a.status - b.status
       }
+      return b.status - a.status
     })
   }
 
@@ -110,12 +112,29 @@ class TaskList extends Array {
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSorted
    */
   sortByCreationDate (asc = true) {
-    return this.toSorted((a, b) => {
+    return this.sort((a, b) => {
       if (asc) {
-        return a.id - b.id
-      } else {
-        return b.id - a.id
+        return a.createdAt - b.createdAt
       }
+      return b.createdAt - a.createdAt
+    })
+  }
+
+  sortByCompletionDate (asc = true) {
+    return this.sort((a, b) => {
+      if (asc) {
+        return a.statusAt - b.statusAt
+      }
+      return b.statusAt - a.statusAt
+    })
+  }
+
+  sortByDueDate (asc = true) {
+    return this.sort((a, b) => {
+      if (asc) {
+        return a.dueDate - b.dueDate
+      }
+      return b.dueDate - a.dueDate
     })
   }
 }

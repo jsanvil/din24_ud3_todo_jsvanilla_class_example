@@ -1,3 +1,6 @@
+'use strict'
+// @ts-check
+
 /**
  * @fileoverview Preload script
  *

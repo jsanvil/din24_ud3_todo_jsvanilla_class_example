@@ -42,6 +42,95 @@
 
 
 
+    <section>
+        <article><h1>ToDo js</h1>
+<p>Aplicación <em>ToDo List</em> con Javascript <em>vanilla</em> hecha en clase (<em>Live coding</em>)</p>
+<p>No utiliza <em>Web Components</em> ni librerías. Se pretende aprender a realizar una aplicación <em>Electron</em> con Javascript puro. Más adelante, se verán las ventajas las librerías de componentes.</p>
+<p><a href="https://excalidraw.com/#json=gptaRL4eHX-SmJ2jUtAKO,t3J_YYwg44sg9BPhw6rWgQ">Excalidraw Mockup</a></p>
+<p><a href="https://jsanvil.github.io/din24_ud3_todo_jsvanilla_class_example/">Documentación en jsdoc</a></p>
+<h2>Ejecución</h2>
+<p>Instalar dependencias:</p>
+<pre class="prettyprint source lang-bash"><code>npm install
+</code></pre>
+<p>Ejecutar la aplicación en modo desarrollo:</p>
+<pre class="prettyprint source lang-bash"><code>npm start
+</code></pre>
+<p>Crear ejecutables en <code>/dist</code> para Windows, Linux:</p>
+<pre class="prettyprint source lang-bash"><code>npm run build
+</code></pre>
+<p>Crear ejecutables para Windows:</p>
+<pre class="prettyprint source lang-bash"><code>npm run build:win
+</code></pre>
+<p>Crear ejecutables para Linux:</p>
+<pre class="prettyprint source lang-bash"><code>npm run build:linux
+</code></pre>
+<h2>Frameworks y librerías</h2>
+<ul>
+<li><a href="https://www.electronjs.org/"><strong>Electron</strong></a>: Framework para crear aplicaciones de escritorio con tecnologías web</li>
+<li><a href="https://getbootstrap.com/"><strong>Bootstrap</strong></a>: Framework CSS para maquetación y estilos</li>
+<li><a href="https://icons.getbootstrap.com/"><strong>Bootstrap Icons</strong></a>: Iconos de Bootstrap</li>
+<li><a href="https://github.com/sindresorhus/electron-reloader"><strong>electron-reloader</strong></a>: <em>Hot reload</em> para Electron</li>
+<li><a href="https://www.electron.build/"><strong>electron-builder</strong></a>: Creación de ejecutables de Electron</li>
+<li><a href="https://github.com/standard/standard"><strong>standard</strong></a>: Linter de Javascript</li>
+<li><a href="https://jsdoc.app/"><strong>jsdoc</strong></a>: Documentación de código</li>
+</ul>
+<h2>Estructura</h2>
+<p>El código de la aplicación se encuentra en la carpeta <code>src/</code>, estructurada de la siguiente forma:</p>
+<ul>
+<li><code>src/</code>
+<ul>
+<li><code>main\</code>
+<ul>
+<li><code>main.js</code>: Proceso principal de Electron</li>
+<li><code>TaskStorage.js</code>: Almacenamiento en formato JSON</li>
+<li><code>menu.js</code>: Menú de la aplicación</li>
+<li><code>ContextMenu.js</code>: Menú contextual de la aplicación</li>
+<li><code>ipcEvents</code>: Mensajes para la comunicación entre procesos</li>
+</ul>
+</li>
+<li><code>renderer\</code>
+<ul>
+<li><code>preload.js</code>: Gestión de la comunicación entre el proceso principal y el proceso de renderizado</li>
+<li><code>index.js</code>: Código de la página principal. Controla eventos de formularios, se podría dividir en varios ficheros</li>
+<li><code>Task.js</code>: Modelo de tarea</li>
+<li><code>TaskList.js</code>: Modelo de lista de tareas. Extiende de <code>Array</code></li>
+<li><code>TaskView.js</code>: Componente de la vista de una tarea</li>
+<li><code>TaskListView.js</code>: Componente de la vista de la lista de tareas</li>
+<li><code>TaskForm.js</code>: Componente del formulario de una tarea</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2>Arquitectura</h2>
+<p>Se separa interfaz de usuario del modelo de datos. Al ser una aplicación sencilla, no llega a ser una arquitectura <em>MVC</em> (Modelo-Vista-Controlador) pero se acerca.</p>
+<p>Las vistas se encargan de mostrar la interfaz y controlar la lógica de negocio y los modelos se encargan de la lógica de datos, lo que permite cambiar el modelo de datos sin afectar a la interfaz, por ejemplo si se cambia el almacenamiento de datos de JSON a una base de datos o peticiones a un servidor.</p>
+<ul>
+<li><strong>Modelos</strong>: <code>Task</code>, <code>TaskList</code></li>
+<li><strong>Vistas</strong>: <code>TaskView</code>, <code>TaskListView</code>, <code>TaskForm</code></li>
+</ul>
+<p>Por otro lado tenemos la arquitectura típica de una aplicación <em>Electron</em>:</p>
+<ul>
+<li><strong>Proceso principal</strong>: <code>main.js</code></li>
+<li><strong>Proceso de renderizado</strong>: <code>index.js</code>, <code>preload.js</code></li>
+</ul>
+<p>El proceso principal se encarga de la creación de la ventana y la comunicación con el sistema operativo, y el proceso de renderizado se encarga de la interfaz de usuario y la lógica de la aplicación.</p>
+<p>Se ha creado un pequeño un módulo <code>TaskStorage</code> para el almacenamiento de tareas en formato JSON desde el proceso principal, puesto que desde el proceso de renderizado (navegador), no se puede acceder a ficheros del sistema.</p>
+<p>Para comunicar el proceso de renderizado con el proceso principal se utiliza <code>contextBridge</code> de Electron:</p>
+<pre class="prettyprint source lang-javascript"><code>// renderer/preload.js
+const { contextBridge, ipcRenderer } = require('electron')
+
+contextBridge.exposeInMainWorld('bridge', {
+  loadList: () => ipcRenderer.invoke('store:load-list'),
+  saveList: (list) => ipcRenderer.invoke('store:save-list', list),
+  confirmDeleteTask: (task) => ipcRenderer.invoke('confirm:delete-task', task),
+  onUpdateTheme: (theme) => ipcRenderer.on('update-theme', theme)
+})
+</code></pre>
+<p>Se exponen funciones para cargar y guardar la lista de tareas y confirmar el borrado de una tarea, incluye un evento que recibe el evento de cambio de tema desde el menú nativo de la aplicación.</p>
+<p>De esta forma se crea una comunicación mediante eventos entre el proceso de renderizado y el proceso principal.</p></article>
+    </section>
+
 
 
 
@@ -99,7 +188,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="main_main.js.html">main/main.js</a>, <a href="main_main.js.html#line1">line 1</a>
+        <a href="main_main.js.html">main/main.js</a>, <a href="main_main.js.html#line4">line 4</a>
     </li></ul></dd>
     
 
@@ -193,7 +282,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="renderer_index.js.html">renderer/index.js</a>, <a href="renderer_index.js.html#line1">line 1</a>
+        <a href="renderer_index.js.html">renderer/index.js</a>, <a href="renderer_index.js.html#line4">line 4</a>
     </li></ul></dd>
     
 
@@ -290,7 +379,7 @@ de la ventana principal a través de <code>window.bridge</code>.</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="renderer_preload.js.html">renderer/preload.js</a>, <a href="renderer_preload.js.html#line1">line 1</a>
+        <a href="renderer_preload.js.html">renderer/preload.js</a>, <a href="renderer_preload.js.html#line4">line 4</a>
     </li></ul></dd>
     
 
@@ -357,7 +446,7 @@ window.bridge.onUpdateTheme(theme => { ... })</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Nov 25 2024 12:06:01 GMT+0100 (hora estándar de Europa central)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Nov 26 2024 08:03:20 GMT+0100 (hora estándar de Europa central)
 </footer>
 
 <script> prettyPrint(); </script>

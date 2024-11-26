@@ -1,3 +1,6 @@
+'use strict'
+// @ts-check
+
 /**
  * @fileoverview Módulo principal de la aplicación
  *

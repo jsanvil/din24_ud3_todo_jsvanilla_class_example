@@ -1,3 +1,6 @@
+'use strict'
+// @ts-check
+
 /**
  * Lista de constantes para los mensajes enviados mediante eventos IPC
  * @module

@@ -1,3 +1,6 @@
+'use strict'
+// @ts-check
+
 import TaskList from './TaskList.js'
 import TaskView from './TaskView.js'
 import TaskForm from './TaskForm.js'

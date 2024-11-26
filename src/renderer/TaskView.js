@@ -1,3 +1,6 @@
+'use strict'
+// @ts-check
+
 /**
  * Representa la vista de una tarea dentro del listado
  *
@@ -26,9 +29,9 @@ class TaskView {
     newTask.innerHTML = `
     <div class="card">
       <div class="card-body d-flex justify-content-between align-items-center gap-2">
-        <input class="form-check form-check-inline form-check-input" type="checkbox" ${this.task.done ? 'checked' : ''
+        <input class="form-check form-check-inline form-check-input" type="checkbox" ${this.task.status ? 'checked' : ''
           }>
-        <span class="flex-grow-1 text-truncate task-title ${this.task.done ? 'task-status-done' : ''}">${this.task.title}</span>
+        <span class="flex-grow-1 text-truncate task-title ${this.task.status ? 'task-status-done' : ''}">${this.task.title}</span>
         <button class="btn btn-sm edit-task" title="Editar"><i class="bi bi-pencil"></i></button>
         <button class="btn btn-sm delete-task" title="Borrar"><i class="bi bi-x-circle "></i></button>
       </div>
@@ -49,9 +52,9 @@ class TaskView {
 
     // marcar/desmarcar completada
     newTask.querySelector('input[type="checkbox"]').addEventListener('change', (e) => {
-      this.task.done = !!e.target.checked
+      this.task.status = !!e.target.checked
       const taskTitle = newTask.querySelector('span')
-      this.task.done ? taskTitle.classList.add('task-status-done') : taskTitle.classList.remove('task-status-done')
+      this.task.status ? taskTitle.classList.add('task-status-done') : taskTitle.classList.remove('task-status-done')
       this.taskListView.taskList.save().then(() => {
         this.taskListView.updateFilteredList()
       })

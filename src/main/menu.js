@@ -1,3 +1,6 @@
+'use strict'
+// @ts-check
+
 const { app, Menu, nativeTheme } = require('electron')
 
 /**

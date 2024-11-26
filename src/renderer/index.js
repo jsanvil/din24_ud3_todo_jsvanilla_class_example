@@ -1,3 +1,6 @@
+'use strict'
+// @ts-check
+
 /**
  * @fileoverview Punto de entrada del proceso renderizado de Electron
  *
