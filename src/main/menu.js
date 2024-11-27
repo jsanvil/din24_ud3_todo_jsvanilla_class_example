@@ -16,34 +16,39 @@ const { app, Menu, nativeTheme } = require('electron')
 function setMainMenu (win, settingsStorage) {
   const template = [
     {
-      label: 'ToDo',
+      label: '&ToDo',
       submenu: [
         {
-          label: 'Salir',
+          label: '&Salir',
           click: () => {
             app.quit()
-          }
+          },
+          accelerator: 'CmdOrCtrl+Q'
         }
       ]
     },
     {
-      label: 'Opciones',
+      label: '&Opciones',
       submenu: [
         {
-          label: 'Modo oscuro',
+          label: 'Modo &Oscuro',
           click: () => {
             win.webContents.send('update-theme', 'dark')
             nativeTheme.themeSource = 'dark'
             settingsStorage.write({ theme: 'dark' })
-          }
+          },
+          type: 'radio',
+          checked: nativeTheme.themeSource === 'dark'
         },
         {
-          label: 'Modo claro',
+          label: 'Modo &Claro',
           click: () => {
             win.webContents.send('update-theme', 'light')
             nativeTheme.themeSource = 'light'
             settingsStorage.write({ theme: 'light' })
-          }
+          },
+          type: 'radio',
+          checked: nativeTheme.themeSource === 'light'
         },
         // Show dev tools only in development
         ...(app.isPackaged ? [] : [{ type: 'separator' }, { role: 'reload' }, { role: 'toggledevtools' }])
