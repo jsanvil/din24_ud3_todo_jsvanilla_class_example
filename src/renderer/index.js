@@ -11,6 +11,15 @@ import Task from './Task.js'
 import TaskForm from './TaskForm.js'
 import TaskListView from './TaskListView.js'
 
+// EVENTOS DE IPC
+
+// Escuchar el evento de cambio de tema
+window.bridge.onUpdateTheme((event, theme) => {
+  document.documentElement.setAttribute('data-bs-theme', theme)
+})
+
+// CARGA INICIAL DE TAREAS
+
 const taskListView = new TaskListView()
 
 // cargar la lista de tareas guardadas
@@ -32,25 +41,15 @@ taskListView.loadList().then(() => {
   })
 })
 
-// ELEMENTOS DEL DOM
+// FORMULARIO DE CREACIÓN DE TAREAS
 
 const taskTitleInput = document.getElementById('create-task-input')
 const newTaskForm = document.getElementById('create-task-form')
 const addTaskOptions = document.getElementById('add-task-options')
-const filterSearchInput = document.getElementById('filter-search')
-const filterHideCompletedInput = document.getElementById('filter-hide-completed')
-const filterResetButton = document.getElementById('filter-reset-button')
-const filterSortByStatusInput = document.getElementById('filter-sort-status')
-const filterSortByPriority = document.getElementById('filter-sort-priority')
-const filterSortByTitle = document.getElementById('filter-sort-title')
-const sidebar = document.getElementById('side-nav')
-const btnOpenSidebar = document.getElementById('btn-open-sidebar')
-const btnCloseSidebar = document.getElementById('btn-close-sidebar')
-const modalRootElement = document.getElementById('modal')
 
-// EVENTOS
-
-// capturar el evento submit del formulario
+// Capturar el evento submit del formulario
+// validar el input y añadir la tarea a la lista
+// previene el envío del formulario y la recarga de la página
 newTaskForm.addEventListener('submit', (e) => {
   e.preventDefault()
 
@@ -72,6 +71,16 @@ newTaskForm.addEventListener('submit', (e) => {
   taskListView.saveList()
 }, false)
 
+// FILTROS
+
+const filterSearchForm = document.getElementById('filter-tasks-form')
+const filterSearchInput = document.getElementById('filter-search')
+const filterHideCompletedInput = document.getElementById('filter-hide-completed')
+const filterResetButton = document.getElementById('filter-reset-button')
+const filterSortByStatusInput = document.getElementById('filter-sort-status')
+const filterSortByPriority = document.getElementById('filter-sort-priority')
+const filterSortByTitle = document.getElementById('filter-sort-title')
+
 // evento del botón de restablecer filtros
 filterResetButton.addEventListener('click', () => {
   taskListView.filters = {
@@ -88,6 +97,17 @@ filterSearchInput.addEventListener('input', (e) => {
   const searchText = e.target.value
   taskListView.filters.search = searchText.trim()
   taskListView.updateFilteredList()
+})
+
+// prevenir el envío del formulario de búsqueda
+// de no hacerlo, recargaría la página
+filterSearchForm.addEventListener('submit', (e) => {
+  e.preventDefault()
+
+  filterSearchInput.parentElement.classList.remove('is-invalid')
+  if (!filterSearchInput.checkValidity()) {
+    filterSearchInput.parentElement.classList.add('is-invalid')
+  }
 })
 
 // evento del filtro de tareas completadas
@@ -114,6 +134,28 @@ filterSortByTitle.addEventListener('change', (e) => {
   taskListView.updateFilteredList()
 })
 
+// EVENTOS DE USABILIDAD
+
+// al cambiar el foco, limpiar el input si el contenido no es inválido
+taskTitleInput.addEventListener('blur', () => {
+  if (!taskTitleInput.checkValidity()) {
+    taskTitleInput.value = ''
+  }
+})
+
+filterSearchInput.addEventListener('blur', () => {
+  if (!filterSearchInput.checkValidity()) {
+    filterSearchInput.value = ''
+  }
+})
+
+// BARRA LATERAL
+
+const sidebar = document.getElementById('side-nav')
+const btnOpenSidebar = document.getElementById('btn-open-sidebar')
+const btnCloseSidebar = document.getElementById('btn-close-sidebar')
+const modalRootElement = document.getElementById('modal')
+
 // abrir la barra lateral
 btnOpenSidebar.addEventListener('click', () => {
   sidebar.classList.add('active')
@@ -124,9 +166,21 @@ btnCloseSidebar.addEventListener('click', () => {
   sidebar.classList.remove('active')
 })
 
-// EVENTOS DE IPC
+// ATAJOS DE TECLADO
 
-// evento para cambiar el tema
-window.bridge.onUpdateTheme((event, theme) => {
-  document.documentElement.setAttribute('data-bs-theme', theme)
+window.addEventListener('keydown', (e) => {
+  // Ctrl + F pone el foco en el input de búsqueda
+  if (e.ctrlKey && e.key === 'f') {
+    filterSearchInput.focus()
+  }
+
+  // Ctrl + N pone el foco en el input de título de tarea
+  if (e.ctrlKey && e.key === 'n') {
+    taskTitleInput.focus()
+  }
+
+  // Esc quita el foco de los inputs
+  if (e.key === 'Escape') {
+    document.activeElement.blur()
+  }
 })

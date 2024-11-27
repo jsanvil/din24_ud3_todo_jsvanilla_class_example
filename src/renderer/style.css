@@ -1,6 +1,6 @@
 :root {
   /* Sobrescribir estilos de Bootstrap */
-  
+
   &[data-bs-theme="dark"] {
     --bs-body-bg: #334;
   }
@@ -120,4 +120,37 @@ input {
   #btn-close-sidebar {
     visibility: visible;
   }
+}
+
+/* keyboard shortcuts */
+
+input.form-control.key-shortcut {
+  & + label {
+    width: 100%;
+    &::after {
+      content: "Ctrl + ?";
+      position: absolute;
+      right: 3em;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.8em;
+      color: #777;
+    }
+  }
+
+  &:focus + label::after {
+    display: none;
+  }
+
+  &:valid + label::after {
+    display: none;
+  }
+}
+
+#create-task-input + label::after {
+  content: "Ctrl + N";
+}
+
+#filter-search + label::after {
+  content: "Ctrl + F";
 }

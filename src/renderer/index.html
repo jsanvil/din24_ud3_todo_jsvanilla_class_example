@@ -59,7 +59,7 @@
                                     <span class="input-group-text"><i class="bi bi-check"></i></span>
                                     <div class="form-floating">
                                         <input type="search"
-                                               class="form-control search"
+                                               class="form-control search key-shortcut"
                                                placeholder="Título de la tarea"
                                                name="taskTitle"
                                                id="create-task-input"
@@ -86,15 +86,17 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title"><i class="bi bi-funnel"></i> Filtros</h4>
-                        <form id="filter-tasks-form">
+                        <form id="filter-tasks-form" novalidate>
                             <fieldset class="d-flex flex-column gap-3">
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-text"><i class="bi bi-search"></i></span>
                                     <div class="form-floating">
                                         <input type="search"
-                                               class="form-control"
+                                               class="form-control key-shortcut"
                                                placeholder="Buscar por título"
                                                name="filterSearch"
+                                               pattern=".*\S.*"
+                                               required
                                                id="filter-search">
                                         <label class="form-label"
                                                for="filter-search">Buscar</label>
