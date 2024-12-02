@@ -28,12 +28,21 @@ class TaskView {
     newTask.classList.add(`task-priority-${this.task.priority}`)
     newTask.innerHTML = `
     <div class="card">
-      <div class="card-body d-flex justify-content-between align-items-center gap-2">
-        <input class="form-check form-check-inline form-check-input" type="checkbox" ${this.task.status ? 'checked' : ''
-          }>
-        <span class="flex-grow-1 text-truncate task-title ${this.task.status ? 'task-status-done' : ''}">${this.task.title}</span>
-        <button class="btn btn-sm edit-task" title="Editar"><i class="bi bi-pencil"></i></button>
-        <button class="btn btn-sm delete-task" title="Borrar"><i class="bi bi-x-circle "></i></button>
+      <div class="card-body d-flex flex-column justify-content-between align-items-center gap-2" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="task-${this.task.id}" href="#task-${this.task.id}">
+        <div class="d-flex justify-content-between align-items-center gap-2 w-100">
+          <input class="form-check form-check-inline form-check-input" type="checkbox" ${this.task.status ? 'checked' : ''}>
+          <span class="flex-grow-1 text-truncate task-title ${this.task.status ? 'task-status-done' : ''}">${this.task.title}</span>
+          <button class="btn btn-sm edit-task" title="Editar"><i class="bi bi-pencil"></i></button>
+          <button class="btn btn-sm delete-task" title="Borrar"><i class="bi bi-x-circle "></i></button>
+        </div>
+        <div class="collapse" id="task-${this.task.id}" data-bs-parent="#task-list">
+            <!--
+            <p>Fecha de creación: ${this.task.created}</p>
+            <p>Fecha de vencimiento: ${this.task.dueDate}</p>
+            -->
+            <p>Prioridad: ${this.task.priority}</p>
+            <p>${this.task.description}</p>
+        </div>
       </div>
     </div>
     `

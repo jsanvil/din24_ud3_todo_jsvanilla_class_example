@@ -1,7 +1,8 @@
 'use strict'
 // @ts-check
 
-const { app, Menu, nativeTheme } = require('electron')
+const { app, Menu, nativeTheme, dialog } = require('electron')
+const { join } = require('path')
 
 /**
  * Módulo para configurar el menú de la aplicación
@@ -52,6 +53,23 @@ function setMainMenu (win, settingsStorage) {
         },
         // Show dev tools only in development
         ...(app.isPackaged ? [] : [{ type: 'separator' }, { role: 'reload' }, { role: 'toggledevtools' }])
+      ]
+    },
+    {
+      label: '&Ayuda',
+      submenu: [
+        {
+          label: 'Acerca de...',
+          click: () => {
+            dialog.showMessageBox(win, {
+              title: 'Acerca de ToDo',
+              message: 'ToDo',
+              detail: 'Aplicación de tareas pendientes\nhttps://github.com/jsanvil/din24_ud3_todo_jsvanilla_class_example',
+              icon: join(__dirname, '../assets/icon.png'),
+              buttons: []
+            })
+          }
+        }
       ]
     }
   ]

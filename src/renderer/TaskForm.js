@@ -118,8 +118,7 @@ class TaskForm {
       <div class="row mb-3">
         <label class="col-sm-3 col-form-label" for="task-description">Descripción</label>
         <div class="col-sm-9">
-          <textarea class="form-control" id="task-description" name="description" placeholder="descripción"
-            value="${this.task.description}"></textarea>
+          <textarea class="form-control" id="task-description" name="description" placeholder="descripción">${this.task.description}</textarea>
         </div>
       </div>
     <form>

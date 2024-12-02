@@ -28,7 +28,7 @@ taskListView.loadList().then(() => {
     const newTask = new Task({ title: taskTitleInput.value })
     const taskForm = new TaskForm({
       task: newTask,
-      idNew: true,
+      isNew: true,
       onSubmit: (task) => {
         taskListView.addTask(task)
         taskListView.saveList()
